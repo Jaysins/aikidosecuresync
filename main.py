@@ -39,3 +39,4 @@ async def on_resync_vulns(kind: str) -> ASYNC_GENERATOR_RESYNC_TYPE:
         yield groups
 
         print("does it yield", groups[0])
+
