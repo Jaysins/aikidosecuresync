@@ -121,7 +121,15 @@
       ]
     },
     "aggregationProperties": {},
-    "relations": {}
+    "relations": {
+      "repository": {
+        "target": "CodeRepository",
+        "title": "Affected Repository",
+        "description": "Code repository with the vulnerability",
+        "required": false,
+        "many": false
+      }
+    }
   }
 ]
 

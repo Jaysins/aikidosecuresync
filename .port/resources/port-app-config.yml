@@ -1,39 +1,43 @@
 resources:
   - kind: CodeRepository
     selector:
-      query: "true" # JQ boolean query. If evaluated to false - skip syncing the object.
-    port:
-      entity:
-        mappings:
-          identifier: .id
-          title: .name
-          blueprint: '"CodeRepository"'
-          properties:
-            id: .id
-            name: .name
-            url: .url
-            provider: .provider
-            external_repo_id: .external_repo_id
-            branch: .branch
-            last_scanned_at: .last_scanned_at
-
-  - kind: Vulnerability
-    selector:
       query: "true"
     port:
       entity:
         mappings:
-          identifier: .id
-          title: .title
+          identifier: '.id | tostring'
+          title: ".name"
+          blueprint: '"CodeRepository"'
+          properties:
+            id: ".id"
+            name: ".name"
+            url: ".url"
+            provider: ".provider"
+            external_repo_id: ".external_repo_id"
+            branch: ".branch"
+            last_scanned_at: ".last_scanned_at"
+
+  - kind: Vulnerability
+    selector:
+      query: "true"
+      filter_code_repo_id: "null"
+      per_page: "20"
+    port:
+      entity:
+        mappings:
+          identifier: '.id | tostring'
+          title: ".title"
           blueprint: '"Vulnerability"'
           properties:
-            id: .id
-            type: .type
-            title: .title
-            description: .description
-            severity_score: .severity_score
-            severity: .severity
-            status: .group_status
-            time_to_fix_minutes: .time_to_fix_minutes
-            how_to_fix: .how_to_fix
-            cveIds: .related_cve_ids
+            id: ".id"
+            type: ".type"
+            title: ".title"
+            description: ".description"
+            severity_score: ".severity_score"
+            severity: ".severity"
+            status: ".group_status"
+            time_to_fix_minutes: ".time_to_fix_minutes"
+            how_to_fix: ".how_to_fix"
+            cveIds: ".related_cve_ids"
+      relations:
+        repository: '.locations[0].id | tostring'
