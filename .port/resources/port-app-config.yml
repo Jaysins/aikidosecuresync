@@ -1,0 +1,33 @@
+resources:
+  - kind: CodeRepository
+    selector:
+      query: "true"
+    port:
+      entity:
+        mappings:
+          identifier: .id
+          title:        .name
+          blueprint:    '"CodeRepository"'
+          properties:
+            url:             .url
+            provider:        .provider
+            external_repo_id: .external_repo_id
+            defaultBranch:   .branch
+            lastScannedAt:   .last_scanned_at
+
+  - kind: Vulnerability
+    selector:
+      query: "true"
+    port:
+      entity:
+        mappings:
+          identifier: .id
+          title:        .title
+          blueprint:    '"Vulnerability"'
+          properties:
+            severityScore:    .severity_score
+            severity:         .severity
+            status:           .group_status
+            timeToFixMinutes: .time_to_fix_minutes
+          relations:
+            in: .locations[0].id

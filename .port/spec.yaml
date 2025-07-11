@@ -1,0 +1,28 @@
+type: aikidosecuresync
+title: Aikido Security Sync
+description: |
+  Fetches code repositories and vulnerability issues from Aikido
+  and syncs them into Port for unified visibility and tracking.
+icon: GitBranch
+
+features:
+  - type: exporter
+    section: Security
+    resources:
+      - kind: CodeRepository
+      - kind: Vulnerability
+
+configurations:
+  - name: aikido_host
+    required: true
+    type: url
+    description: "Base URL of your Aikido API (e.g. https://app.aikido.dev)"
+  - name: client_id
+    required: true
+    type: string
+    description: "OAuth2 Client ID (from Aikido integrations page)"
+  - name: client_secret
+    required: true
+    type: string
+    sensitive: true
+    description: "OAuth2 Client Secret (from Aikido integrations page)"

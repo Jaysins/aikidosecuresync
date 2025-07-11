@@ -1,0 +1,123 @@
+[
+  {
+    "identifier": "CodeRepository",
+    "title": "Code Repository",
+    "icon": "GitBranch",
+    "description": "A code repository synced from Aikido",
+    "schema": {
+      "properties": {
+        "external_repo_id": {
+          "title": "External Repository ID",
+          "type": "string"
+        },
+        "name": {
+          "title": "Repository Name",
+          "type": "string"
+        },
+        "provider": {
+          "title": "Provider",
+          "type": "string"
+        },
+        "url": {
+          "title": "Repository URL",
+          "type": "string",
+          "format": "url"
+        },
+        "last_scanned_at": {
+          "title": "Last Scanned At (Epoch)",
+          "type": "number"
+        },
+        "branch": {
+          "title": "Branch",
+          "type": "string"
+        },
+        "active": {
+          "title": "Active",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "external_repo_id",
+        "name",
+        "provider",
+        "url"
+      ]
+    },
+    "relations": {}
+  },
+  {
+    "identifier": "Vulnerability",
+    "title": "Vulnerability",
+    "icon": "ShieldAlert",
+    "description": "A security vulnerability issue detected by Aikido",
+    "schema": {
+      "properties": {
+        "id": {
+          "title": "Vulnerability ID",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        },
+        "severity": {
+          "title": "Severity",
+          "type": "string",
+          "enum": [
+            "Critical",
+            "High",
+            "Medium",
+            "Low",
+            "Info"
+          ]
+        },
+        "status": {
+          "title": "Status",
+          "type": "string",
+          "enum": [
+            "Open",
+            "In Progress",
+            "Resolved",
+            "Accepted",
+            "False Positive"
+          ]
+        },
+        "cveIds": {
+          "title": "CVE Identifiers",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "locationPath": {
+          "title": "Path",
+          "type": "string"
+        },
+        "discoveredAt": {
+          "title": "Discovered At",
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "severity",
+        "status"
+      ]
+    },
+    "relations": {
+      "affects": {
+        "title": "Affected Repository",
+        "target": "CodeRepository",
+        "required": true,
+        "many": false
+      }
+    }
+  }
+]
+
