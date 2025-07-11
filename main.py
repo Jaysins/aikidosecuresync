@@ -6,7 +6,7 @@ from port_ocean.context.ocean import ocean
 from port_ocean.core.ocean_types import ASYNC_GENERATOR_RESYNC_TYPE
 
 from client import AikidoClient
-from integration import ObjectKind, CodeRepoResourceConfig, VulnerabilityResourceConfig
+from integration import ObjectKind, CodeRepoResourceConfig, VulnerabilityResourceConfig, UserResourceConfig
 
 
 def initialize_aikido_client() -> AikidoClient:
@@ -37,3 +37,17 @@ async def on_resync_vulns(kind: str) -> ASYNC_GENERATOR_RESYNC_TYPE:
     async for groups in client.list_open_issue_groups(repo_id=sel.repo_id, per_page=sel.per_page):
         logger.info(f"Received vulnerability batch of size: {len(groups)}")
         yield groups
+
+
+@ocean.on_resync(ObjectKind.USER)
+async def on_resync_users(kind: str) -> ASYNC_GENERATOR_RESYNC_TYPE:
+    client = initialize_aikido_client()
+    sel = cast(UserResourceConfig, event.resource_config).selector
+    logger.info(f"Syncing users (team={sel.filter_team_id}, inactive={sel.include_inactive})")
+    async for users in client.list_users(
+            filter_team_id=sel.filter_team_id,
+            include_inactive=sel.include_inactive,
+            per_page=sel.per_page
+    ):
+        logger.info(f"Received user batch of size: {len(users)}")
+        yield users

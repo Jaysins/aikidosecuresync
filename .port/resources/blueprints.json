@@ -130,6 +130,50 @@
         "many": false
       }
     }
+  },
+   {
+    "identifier": "User",
+    "title": "User",
+    "icon": "User",
+    "description": "A user in Aikido",
+    "schema": {
+      "properties": {
+        "id": {
+          "title": "User ID",
+          "type": "number"
+        },
+        "full_name": {
+          "title": "Full Name",
+          "type": "string"
+        },
+        "email": {
+          "title": "Email",
+          "type": "string",
+          "format": "email"
+        },
+        "active": {
+          "title": "Active",
+          "type": "boolean"
+        },
+        "last_login_timestamp": {
+          "title": "Last Login (Epoch)",
+          "type": "number"
+        },
+        "role": {
+          "title": "Role",
+          "type": "string",
+          "enum": ["admin","default","team_only"]
+        },
+        "auth_type": {
+          "title": "Auth Type",
+          "type": "string",
+          "enum": ["github","gitlab","bitbucket","google","office365","saml"]
+        }
+      },
+      "required": ["id","full_name","email"]
+    },
+    "aggregationProperties": {},
+    "relations": {}
   }
 ]
 

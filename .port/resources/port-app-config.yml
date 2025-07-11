@@ -41,3 +41,22 @@ resources:
             cveIds: ".related_cve_ids"
       relations:
         repository: '.locations[0].id | tostring'
+  - kind: User
+    selector:
+      query: "true"
+      filter_team_id: null
+      include_inactive: 0
+    port:
+      entity:
+        mappings:
+          identifier: ".id | tostring"
+          title: ".full_name"
+          blueprint: '"User"'
+          properties:
+            id: ".id"
+            full_name: ".full_name"
+            email: ".email"
+            active: ".active"
+            last_login_timestamp: ".last_login_timestamp"
+            role: ".role"
+            auth_type: ".auth_type"

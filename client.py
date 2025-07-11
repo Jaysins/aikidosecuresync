@@ -12,6 +12,7 @@ from httpx import Timeout
 class Endpoints:
     REPOSITORIES = "/api/public/v1/repositories/code"
     ISSUE_GROUPS = "/api/public/v1/open-issue-groups"
+    USERS = "/api/public/v1/users"
 
 
 class AikidoClient:
@@ -102,3 +103,22 @@ class AikidoClient:
                 break
             yield groups
             page += 1
+
+    async def list_users(
+            self,
+            filter_team_id: int | None = None,
+            include_inactive: int = 0,
+            page: int = 0,
+            per_page: int = 20
+    ) -> AsyncGenerator[list[dict[str, Any]], None]:
+        while True:
+            params = {"page": page, "per_page": per_page, "include_inactive": include_inactive}
+            if filter_team_id is not None:
+                params["filter_team_id"] = filter_team_id
+            resp = await self._send_api_request("GET", Endpoints.USERS, params=params)
+            users = resp.json()
+            if not users:
+                break
+            yield users
+            page += 1
+            print(users)

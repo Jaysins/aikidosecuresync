@@ -9,6 +9,7 @@ from pydantic.fields import Field
 class ObjectKind:
     CODE_REPOSITORY = "CodeRepository"
     VULNERABILITY = "Vulnerability"
+    USER = "User"
 
 
 class RepositorySelector(Selector):
@@ -44,10 +45,32 @@ class VulnerabilityResourceConfig(ResourceConfig):
     kind: Literal["Vulnerability"]
 
 
+class UserSelector(Selector):
+    filter_team_id: int | None = Field(
+        alias="filter_team_id",
+        default=None,
+        description="Only users in this team"
+    )
+    include_inactive: int = Field(
+        default=0,
+        description="0 to exclude inactive, 1 to include"
+    )
+    per_page: int = Field(
+        default=20,
+        description="Items per page"
+    )
+
+
+class UserResourceConfig(ResourceConfig):
+    selector: UserSelector
+    kind: Literal["User"]
+
+
 class AikidoPortAppConfig(PortAppConfig):
     resources: list[
         CodeRepoResourceConfig
         | VulnerabilityResourceConfig
+        | UserResourceConfig
         | ResourceConfig
         ] = Field(default_factory=list)
 
