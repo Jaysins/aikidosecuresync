@@ -37,6 +37,3 @@ async def on_resync_vulns(kind: str) -> ASYNC_GENERATOR_RESYNC_TYPE:
     async for groups in client.list_open_issue_groups(repo_id=sel.repo_id, per_page=sel.per_page):
         logger.info(f"Received vulnerability batch of size: {len(groups)}")
         yield groups
-
-        print("does it yield", groups[0])
-

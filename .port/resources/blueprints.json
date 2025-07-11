@@ -6,6 +6,10 @@
     "description": "A code repository synced from Aikido",
     "schema": {
       "properties": {
+        "id": {
+          "title": "Repository ID",
+          "type": "number"
+        },
         "external_repo_id": {
           "title": "External Repository ID",
           "type": "string"
@@ -23,37 +27,39 @@
           "type": "string",
           "format": "url"
         },
-        "last_scanned_at": {
-          "title": "Last Scanned At (Epoch)",
-          "type": "number"
-        },
         "branch": {
           "title": "Branch",
           "type": "string"
         },
-        "active": {
-          "title": "Active",
-          "type": "boolean"
+        "last_scanned_at": {
+          "title": "Last Scanned At (Epoch)",
+          "type": "number"
         }
       },
       "required": [
+        "id",
         "external_repo_id",
         "name",
         "provider",
         "url"
       ]
     },
+    "aggregationProperties": {},
     "relations": {}
   },
   {
     "identifier": "Vulnerability",
     "title": "Vulnerability",
-    "icon": "ShieldAlert",
+    "icon": "Shield",
     "description": "A security vulnerability issue detected by Aikido",
     "schema": {
       "properties": {
         "id": {
           "title": "Vulnerability ID",
+          "type": "number"
+        },
+        "type": {
+          "title": "Type",
           "type": "string"
         },
         "title": {
@@ -64,27 +70,39 @@
           "title": "Description",
           "type": "string"
         },
+        "severity_score": {
+          "title": "Severity Score",
+          "type": "number"
+        },
         "severity": {
           "title": "Severity",
           "type": "string",
           "enum": [
-            "Critical",
-            "High",
-            "Medium",
-            "Low",
-            "Info"
+            "critical",
+            "high",
+            "medium",
+            "low",
+            "info"
           ]
         },
         "status": {
           "title": "Status",
           "type": "string",
           "enum": [
-            "Open",
-            "In Progress",
-            "Resolved",
-            "Accepted",
-            "False Positive"
+            "new",
+            "in_progress",
+            "resolved",
+            "accepted",
+            "false_positive"
           ]
+        },
+        "time_to_fix_minutes": {
+          "title": "Time to Fix (minutes)",
+          "type": "number"
+        },
+        "how_to_fix": {
+          "title": "How to Fix",
+          "type": "string"
         },
         "cveIds": {
           "title": "CVE Identifiers",
@@ -92,32 +110,18 @@
           "items": {
             "type": "string"
           }
-        },
-        "locationPath": {
-          "title": "Path",
-          "type": "string"
-        },
-        "discoveredAt": {
-          "title": "Discovered At",
-          "type": "string",
-          "format": "date-time"
         }
       },
       "required": [
         "id",
         "title",
         "severity",
+        "severity_score",
         "status"
       ]
     },
-    "relations": {
-      "affects": {
-        "title": "Affected Repository",
-        "target": "CodeRepository",
-        "required": true,
-        "many": false
-      }
-    }
+    "aggregationProperties": {},
+    "relations": {}
   }
 ]
 

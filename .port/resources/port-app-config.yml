@@ -1,19 +1,21 @@
 resources:
   - kind: CodeRepository
     selector:
-      query: "true"
+      query: "true" # JQ boolean query. If evaluated to false - skip syncing the object.
     port:
       entity:
         mappings:
           identifier: .id
-          title:        .name
-          blueprint:    '"CodeRepository"'
+          title: .name
+          blueprint: '"CodeRepository"'
           properties:
-            url:             .url
-            provider:        .provider
+            id: .id
+            name: .name
+            url: .url
+            provider: .provider
             external_repo_id: .external_repo_id
-            defaultBranch:   .branch
-            lastScannedAt:   .last_scanned_at
+            branch: .branch
+            last_scanned_at: .last_scanned_at
 
   - kind: Vulnerability
     selector:
@@ -22,12 +24,16 @@ resources:
       entity:
         mappings:
           identifier: .id
-          title:        .title
-          blueprint:    '"Vulnerability"'
+          title: .title
+          blueprint: '"Vulnerability"'
           properties:
-            severityScore:    .severity_score
-            severity:         .severity
-            status:           .group_status
-            timeToFixMinutes: .time_to_fix_minutes
-          relations:
-            in: .locations[0].id
+            id: .id
+            type: .type
+            title: .title
+            description: .description
+            severity_score: .severity_score
+            severity: .severity
+            status: .group_status
+            time_to_fix_minutes: .time_to_fix_minutes
+            how_to_fix: .how_to_fix
+            cveIds: .related_cve_ids
