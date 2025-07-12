@@ -11,6 +11,8 @@ features:
     resources:
       - kind: CodeRepository
       - kind: Vulnerability
+      - kind: User
+      - kind: Issue
 
 configurations:
   - name: aikido_host

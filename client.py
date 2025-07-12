@@ -13,6 +13,7 @@ class Endpoints:
     REPOSITORIES = "/api/public/v1/repositories/code"
     ISSUE_GROUPS = "/api/public/v1/open-issue-groups"
     USERS = "/api/public/v1/users"
+    ISSUES = "/api/public/v1/issues"
 
 
 class AikidoClient:
@@ -122,3 +123,54 @@ class AikidoClient:
             yield users
             page += 1
             print(users)
+
+    async def list_issues(
+            self,
+            format: str = "json",
+            filter_status: str = "all",
+            filter_team_id: int = None,
+            filter_issue_group_id: int = None,
+            filter_code_repo_id: int = None,
+            filter_container_repo_id: int = None,
+            filter_container_repo_name: str = None,
+            filter_domain_id: int = None,
+            filter_issue_type: str = None,
+            filter_severities: str = None,
+            per_page: int = 20,
+            page: int = 0
+    ) -> AsyncGenerator[list[dict[str, Any]], None]:
+        while True:
+            params: dict[str, Any] = {
+                "format": format,
+                "filter_status": filter_status,
+                "per_page": per_page,
+                "page": page,
+            }
+
+            if filter_team_id is not None:
+                params["filter_team_id"] = filter_team_id
+            if filter_issue_group_id is not None:
+                params["filter_issue_group_id"] = filter_issue_group_id
+            if filter_code_repo_id is not None:
+                params["filter_code_repo_id"] = filter_code_repo_id
+            if filter_container_repo_id is not None:
+                params["filter_container_repo_id"] = filter_container_repo_id
+            if filter_container_repo_name is not None:
+                params["filter_container_repo_name"] = filter_container_repo_name
+            if filter_domain_id is not None:
+                params["filter_domain_id"] = filter_domain_id
+            if filter_issue_type is not None:
+                params["filter_issue_type"] = filter_issue_type
+            if filter_severities is not None:
+                params["filter_severities"] = filter_severities
+
+            resp = await self._send_api_request(
+                "GET",
+                Endpoints.ISSUES,
+                params=params,
+            )
+            issues = resp.json()
+            if not issues:
+                break
+            yield issues
+            page += 1

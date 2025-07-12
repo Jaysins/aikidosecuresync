@@ -174,6 +174,75 @@
     },
     "aggregationProperties": {},
     "relations": {}
+  },
+  {
+    "identifier": "Issue",
+    "title": "Issue",
+    "icon": "Bug",
+    "description": "A security issue reported by Aikido",
+    "schema": {
+      "properties": {
+        "id": { "type": "number", "title": "Issue ID" },
+        "group_id": { "type": "number", "title": "Issue Group ID" },
+        "attack_surface": { "type": "string", "title": "Attack Surface" },
+        "status": { "type": "string", "title": "Status" },
+        "severity": { "type": "string", "title": "Severity Score" },
+        "severity_score": { "type": "number", "title": "Severity Numeric" },
+        "type": { "type": "string", "title": "Issue Type" },
+        "affected_package": { "type": "string", "title": "Affected Package" },
+        "affected_file": { "type": "string", "title": "Affected File" },
+        "first_detected_at": { "type": "number", "title": "First Detected At" },
+        "code_repo_name": { "type": "string", "title": "Code Repository Name" },
+        "container_repo_name": {
+          "type": "string",
+          "title": "Container Repository Name",
+          "nullable": true
+        },
+        "cve_id": {
+          "type": "string",
+          "title": "CVE ID",
+          "nullable": true
+        },
+        "ignored_at": {
+          "type": "number",
+          "title": "Ignored At",
+          "nullable": true
+        },
+        "closed_at": {
+          "type": "number",
+          "title": "Closed At",
+          "nullable": true
+        },
+        "ignored_by": {
+          "type": "string",
+          "title": "Ignored By",
+          "nullable": true
+        },
+        "installed_version": {
+          "type": "string",
+          "title": "Installed Version",
+          "nullable": true
+        },
+        "patched_versions": {
+          "type": "array",
+          "title": "Patched Versions",
+          "items": { "type": "string" }
+        },
+        "license_type": {
+          "type": "string",
+          "title": "License Type",
+          "nullable": true
+        },
+        "programming_language": {
+          "type": "string",
+          "title": "Language",
+          "nullable": true
+        }
+      },
+      "required": ["id", "group_id", "status", "severity_score"]
+    },
+    "aggregationProperties": {},
+    "relations": {}
   }
 ]
 
