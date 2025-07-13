@@ -63,61 +63,9 @@ class UserSelector(Selector):
     )
 
 
-class AikidoIssueSelector(Selector):
-    format: str = Field(
-        default="json",
-        description="Response format (default: json)"
-    )
-    filter_status: str = Field(
-        default="all",
-        description="Filter by status (default: all)"
-    )
-    filter_team_id: int = Field(
-        default=None,
-        description="Filter by Team ID"
-    )
-    filter_issue_group_id: int = Field(
-        default=None,
-        description="Filter by Issue Group ID"
-    )
-    filter_code_repo_id: int = Field(
-        default=None,
-        description="Filter by Code Repository ID"
-    )
-    filter_container_repo_id: int = Field(
-        default=None,
-        description="Filter by Container Repository ID"
-    )
-    filter_container_repo_name: str = Field(
-        default=None,
-        description="Filter by Container Repository Name"
-    )
-    filter_domain_id: int = Field(
-        default=None,
-        description="Filter by Domain ID"
-    )
-    filter_issue_type: str = Field(
-        default=None,
-        description="Filter by Issue Type"
-    )
-    filter_severities: str = Field(
-        default=None,
-        description="Filter by severities (comma-separated)"
-    )
-    per_page: int = Field(
-        default=20,
-        description="Items per page"
-    )
-
-
 class UserResourceConfig(ResourceConfig):
     selector: UserSelector
     kind: Literal["User"]
-
-
-class AikidoIssueResourceConfig(ResourceConfig):
-    selector: AikidoIssueSelector
-    kind: Literal["Issue"]
 
 
 class AikidoPortAppConfig(PortAppConfig):
@@ -125,7 +73,6 @@ class AikidoPortAppConfig(PortAppConfig):
         CodeRepoResourceConfig
         | VulnerabilityResourceConfig
         | UserResourceConfig
-        | AikidoIssueResourceConfig
         ] = Field(default_factory=list)
 
 
