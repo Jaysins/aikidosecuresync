@@ -6,21 +6,13 @@ from port_ocean.core.integrations.base import BaseIntegration
 from pydantic.fields import Field
 
 
-class ObjectKind:
-    CODE_REPOSITORY = "CodeRepository"
-    VULNERABILITY = "Vulnerability"
-    USER = "User"
-    ISSUE = "Issue"
-    OPEN_ISSUE_GROUP = "OpenIssueGroup"
-
-
 class RepositorySelector(Selector):
     include_inactive: bool = Field(
         default=False,
         description="Include inactive repositories",
     )
     per_page: int = Field(
-        default=20,
+        default=100,
         description="Items per page (10–200)",
     )
 
@@ -39,40 +31,18 @@ class VulnerabilitySelector(Selector):
 
 class CodeRepoResourceConfig(ResourceConfig):
     selector: RepositorySelector
-    kind: Literal["CodeRepository"]
+    kind: Literal["code_repository"]
 
 
 class VulnerabilityResourceConfig(ResourceConfig):
     selector: VulnerabilitySelector
-    kind: Literal["Vulnerability"]
-
-
-class UserSelector(Selector):
-    filter_team_id: int | None = Field(
-        alias="filter_team_id",
-        default=None,
-        description="Only users in this team"
-    )
-    include_inactive: int = Field(
-        default=0,
-        description="0 to exclude inactive, 1 to include"
-    )
-    per_page: int = Field(
-        default=20,
-        description="Items per page"
-    )
-
-
-class UserResourceConfig(ResourceConfig):
-    selector: UserSelector
-    kind: Literal["User"]
+    kind: Literal["vulnerability"]
 
 
 class AikidoPortAppConfig(PortAppConfig):
     resources: list[
         CodeRepoResourceConfig
         | VulnerabilityResourceConfig
-        | UserResourceConfig
         ] = Field(default_factory=list)
 
 

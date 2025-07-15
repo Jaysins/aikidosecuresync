@@ -1,5 +1,5 @@
 resources:
-  - kind: CodeRepository
+  - kind: code_repository
     selector:
       query: "true"
     port:
@@ -7,7 +7,7 @@ resources:
         mappings:
           identifier: '.id | tostring'
           title: ".name"
-          blueprint: '"CodeRepository"'
+          blueprint: '"codeRepository"'
           properties:
             id: ".id"
             name: ".name"
@@ -17,17 +17,15 @@ resources:
             branch: ".branch"
             last_scanned_at: ".last_scanned_at"
 
-  - kind: Vulnerability
+  - kind: vulnerability
     selector:
       query: "true"
-      filter_code_repo_id: null
-      per_page: 20
     port:
       entity:
         mappings:
           identifier: '.id | tostring'
           title: ".title"
-          blueprint: '"Vulnerability"'
+          blueprint: '"vulnerability"'
           properties:
             id: ".id"
             type: ".type"
@@ -42,22 +40,3 @@ resources:
       relations:
         repository: '.locations[0].id | tostring'
 
-  - kind: User
-    selector:
-      query: "true"
-      filter_team_id: null
-      include_inactive: 0
-    port:
-      entity:
-        mappings:
-          identifier: ".id | tostring"
-          title: ".full_name"
-          blueprint: '"User"'
-          properties:
-            id: ".id"
-            full_name: ".full_name"
-            email: ".email"
-            active: ".active"
-            last_login_timestamp: ".last_login_timestamp"
-            role: ".role"
-            auth_type: ".auth_type"

@@ -1,6 +1,6 @@
 [
   {
-    "identifier": "CodeRepository",
+    "identifier": "codeRepository",
     "title": "Code Repository",
     "icon": "GitBranch",
     "description": "A code repository synced from Aikido",
@@ -48,7 +48,7 @@
     "relations": {}
   },
   {
-    "identifier": "Vulnerability",
+    "identifier": "vulnerability",
     "title": "Vulnerability",
     "icon": "Shield",
     "description": "A security vulnerability issue detected by Aikido",
@@ -123,57 +123,13 @@
     "aggregationProperties": {},
     "relations": {
       "repository": {
-        "target": "CodeRepository",
+        "target": "codeRepository",
         "title": "Affected Repository",
         "description": "Code repository with the vulnerability",
         "required": false,
         "many": false
       }
     }
-  },
-   {
-    "identifier": "User",
-    "title": "User",
-    "icon": "User",
-    "description": "A user in Aikido",
-    "schema": {
-      "properties": {
-        "id": {
-          "title": "User ID",
-          "type": "number"
-        },
-        "full_name": {
-          "title": "Full Name",
-          "type": "string"
-        },
-        "email": {
-          "title": "Email",
-          "type": "string",
-          "format": "email"
-        },
-        "active": {
-          "title": "Active",
-          "type": "boolean"
-        },
-        "last_login_timestamp": {
-          "title": "Last Login (Epoch)",
-          "type": "number"
-        },
-        "role": {
-          "title": "Role",
-          "type": "string",
-          "enum": ["admin","default","team_only"]
-        },
-        "auth_type": {
-          "title": "Auth Type",
-          "type": "string",
-          "enum": ["github","gitlab","bitbucket","google","office365","saml"]
-        }
-      },
-      "required": ["id","full_name","email"]
-    },
-    "aggregationProperties": {},
-    "relations": {}
   }
 ]
 

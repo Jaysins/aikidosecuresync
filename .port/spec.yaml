@@ -9,22 +9,30 @@ features:
   - type: exporter
     section: Security
     resources:
-      - kind: CodeRepository
-      - kind: Vulnerability
-      - kind: User
-      - kind: Issue
+      - kind: code_repository
+      - kind: vulnerability
 
 configurations:
-  - name: aikido_host
-    required: true
+  - name: aikidoHost
+    required: false
     type: url
+    default: https://app.aikido.dev
     description: "Base URL of your Aikido API (e.g. https://app.aikido.dev)"
-  - name: client_id
+  - name: clientId
     required: true
     type: string
     description: "OAuth2 Client ID (from Aikido integrations page)"
-  - name: client_secret
+  - name: clientSecret
     required: true
     type: string
     sensitive: true
     description: "OAuth2 Client Secret (from Aikido integrations page)"
+  - name: hmacSigningSecret
+    required: true
+    type: string
+    sensitive: true
+    description: "HMAC Client Secret (from Aikido integrations page)"
+
+eventListener:
+  type: WEBHOOKS_ONLY
+  appHost: "${OCEAN__BASE_URL}"

@@ -13,6 +13,7 @@ class Endpoints:
     REPOSITORIES = "/api/public/v1/repositories/code"
     ISSUE_GROUPS = "/api/public/v1/open-issue-groups"
     USERS = "/api/public/v1/users"
+    ISSUE_GROUP_DETAIL = "/api/public/v1/issues/groups/{}"  # ← new
 
 
 class AikidoClient:
@@ -59,59 +60,71 @@ class AikidoClient:
         async with self.rate_limiter, self._semaphore:
             url = f"{self.host}{path}"
             logger.debug(f"Aikido request → {method} {url} params={params}")
-            resp = await self.http_client.request(method, url=url, params=params)
-            resp.raise_for_status()
-            return resp
+            try:
+                resp = await self.http_client.request(method, url=url, params=params)
+                resp.raise_for_status()
+                return resp
+            except httpx.HTTPStatusError as e:
+                logger.error(f"Request failed: {method} {url} status={e.response.status_code}")
+            except httpx.RequestError as e:
+                logger.error(f"Request error: {method} {url} error={str(e)}")
+
+    async def _get_paginated(
+            self,
+            path: str,
+            params: dict[str, Any] | None = None,
+            per_page: int = 20
+    ) -> AsyncGenerator[list[dict[str, Any]], None]:
+        page = 0
+        while True:
+            paginated_params = (params or {}).copy()
+            paginated_params.update({"page": page, "per_page": per_page})
+
+            resp = await self._send_api_request("GET", path, params=paginated_params)
+            data = resp.json()
+
+            if not data:
+                break
+            yield data
+            page += 1
 
     async def list_repositories(
             self,
             include_inactive: bool = False,
-            page: int = 0,
             per_page: int = 20
     ) -> AsyncGenerator[list[dict[str, Any]], None]:
-        while True:
-            resp = await self._send_api_request(
-                "GET",
+        params = {"include_inactive": include_inactive}
+        async for repos in self._get_paginated(
                 Endpoints.REPOSITORIES,
-                params={"page": page, "per_page": per_page, "include_inactive": include_inactive},
-            )
-            data = resp.json()
-
-            repos = data
-            if not repos:
-                break
+                params=params,
+                per_page=per_page
+        ):
             yield repos
-            page += 1
 
     async def list_open_issue_groups(
             self,
             repo_id: int | None = None,
-            page: int = 0,
             per_page: int = 20
     ) -> AsyncGenerator[list[dict[str, Any]], None]:
-        while True:
-            params: dict[str, Any] = {"page": page, "per_page": per_page}
-            if repo_id is not None:
-                params["filter_code_repo_id"] = repo_id
-            resp = await self._send_api_request(
-                "GET",
+        params = {}
+        if repo_id is not None:
+            params["filter_code_repo_id"] = repo_id
+
+        async for groups in self._get_paginated(
                 Endpoints.ISSUE_GROUPS,
                 params=params,
-            )
-            groups = resp.json()
-            if not groups:
-                break
+                per_page=per_page
+        ):
             yield groups
-            page += 1
 
-    async def list_users(
+    async def get_issue_group(
             self,
-            filter_team_id: int | None = None,
-            include_inactive: int = 0
-    ) -> AsyncGenerator[list[dict[str, Any]], None]:
-        params = {"include_inactive": include_inactive}
-        if filter_team_id is not None:
-            params["filter_team_id"] = filter_team_id
-        resp = await self._send_api_request("GET", Endpoints.USERS, params=params)
-        users = resp.json()
-        yield users
+            issue_group_id: int
+    ) -> dict[str, Any]:
+        """
+        Fetch the details of a single Aikido issue group by ID.
+        GET /api/public/v1/issues/groups/{issue_group_id}
+        """
+        path = Endpoints.ISSUE_GROUP_DETAIL.format(issue_group_id)
+        resp = await self._send_api_request("GET", path)
+        return resp.json()
