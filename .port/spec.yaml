@@ -33,6 +33,3 @@ configurations:
     sensitive: true
     description: "HMAC Client Secret (from Aikido integrations page)"
 
-eventListener:
-  type: WEBHOOKS_ONLY
-  appHost: "${OCEAN__BASE_URL}"
