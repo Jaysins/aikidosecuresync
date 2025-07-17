@@ -6,14 +6,14 @@ from port_ocean.context.ocean import ocean
 from port_ocean.core.ocean_types import ASYNC_GENERATOR_RESYNC_TYPE
 from initialize_client import create_aikido_client
 from kinds import Kinds
-from integration import CodeRepoResourceConfig, VulnerabilityResourceConfig
+from integration import AikidoRepositoryResourceConfig, VulnerabilityResourceConfig
 from webhook_processors.vulnerability_webhook_processor import VulnerabilityWebhookProcessor
 
 
-@ocean.on_resync(Kinds.CODE_REPOSITORY)
+@ocean.on_resync(Kinds.REPOSITORY)
 async def on_resync_repos(kind: str) -> ASYNC_GENERATOR_RESYNC_TYPE:
     client = create_aikido_client()
-    sel = cast(CodeRepoResourceConfig, event.resource_config).selector
+    sel = cast(AikidoRepositoryResourceConfig, event.resource_config).selector
     logger.info(f"Syncing code repos (include_inactive={sel.include_inactive})")
     async for repos in client.list_repositories(
             include_inactive=sel.include_inactive, per_page=sel.per_page):
@@ -25,10 +25,11 @@ async def on_resync_repos(kind: str) -> ASYNC_GENERATOR_RESYNC_TYPE:
 async def on_resync_vulns(kind: str) -> ASYNC_GENERATOR_RESYNC_TYPE:
     client = create_aikido_client()
     sel = cast(VulnerabilityResourceConfig, event.resource_config).selector
-    logger.info(f"Syncing vulnerabilities for repo_id={sel.repo_id}")
-    async for groups in client.list_open_issue_groups(repo_id=sel.repo_id, per_page=sel.per_page):
-        logger.info(f"Received vulnerability batch of size: {len(groups)}")
-        yield groups
 
+    issues = await client.export_issues(
+        filter_status="all",
+        filter_issue_group_id=sel.filter_issue_group_id
+    )
+    yield issues
 
 ocean.add_webhook_processor("/webhook", VulnerabilityWebhookProcessor)

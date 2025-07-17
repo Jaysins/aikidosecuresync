@@ -13,7 +13,8 @@ class Endpoints:
     REPOSITORIES = "/api/public/v1/repositories/code"
     ISSUE_GROUPS = "/api/public/v1/open-issue-groups"
     USERS = "/api/public/v1/users"
-    ISSUE_GROUP_DETAIL = "/api/public/v1/issues/groups/{}"  # ← new
+    ISSUE_DETAIL = "/api/public/v1/issues/{}"
+    ISSUES_EXPORT = "/api/public/v1/issues/export"
 
 
 class AikidoClient:
@@ -117,14 +118,56 @@ class AikidoClient:
         ):
             yield groups
 
-    async def get_issue_group(
+    async def get_issue(
             self,
-            issue_group_id: int
+            issue_id: int
     ) -> dict[str, Any]:
         """
-        Fetch the details of a single Aikido issue group by ID.
-        GET /api/public/v1/issues/groups/{issue_group_id}
+        Fetch the details of a single Aikido issue by ID.
+        GET /api/public/v1/issues/{issue_id}
         """
-        path = Endpoints.ISSUE_GROUP_DETAIL.format(issue_group_id)
+        path = Endpoints.ISSUE_DETAIL.format(issue_id)
         resp = await self._send_api_request("GET", path)
+        return resp.json()
+
+    async def export_issues(
+            self,
+            format_: str = "json",
+            filter_status: str = "all",
+            filter_team_id: int | None = None,
+            filter_issue_group_id: int | None = None,
+            filter_code_repo_id: int | None = None,
+            filter_container_repo_id: int | None = None,
+            filter_container_repo_name: str | None = None,
+            filter_domain_id: int | None = None,
+            filter_issue_type: str | None = None,
+            filter_severities: str | None = None,
+    ) -> list[dict[str, Any]]:
+        """
+        Fetch a full export of issues from Aikido.
+
+        GET /api/public/v1/issues/export
+        """
+        params: dict[str, Any] = {"format": format_, "filter_status": filter_status}
+
+        # Add any optional filters if provided
+        if filter_team_id is not None:
+            params["filter_team_id"] = filter_team_id
+        if filter_issue_group_id is not None:
+            params["filter_issue_group_id"] = filter_issue_group_id
+        if filter_code_repo_id is not None:
+            params["filter_code_repo_id"] = filter_code_repo_id
+        if filter_container_repo_id is not None:
+            params["filter_container_repo_id"] = filter_container_repo_id
+        if filter_container_repo_name is not None:
+            params["filter_container_repo_name"] = filter_container_repo_name
+        if filter_domain_id is not None:
+            params["filter_domain_id"] = filter_domain_id
+        if filter_issue_type is not None:
+            params["filter_issue_type"] = filter_issue_type
+        if filter_severities is not None:
+            params["filter_severities"] = filter_severities
+
+        resp = await self._send_api_request("GET", Endpoints.ISSUES_EXPORT, params=params)
+
         return resp.json()

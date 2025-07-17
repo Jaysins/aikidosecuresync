@@ -1,5 +1,5 @@
 resources:
-  - kind: code_repository
+  - kind: repository
     selector:
       query: "true"
     port:
@@ -7,7 +7,7 @@ resources:
         mappings:
           identifier: '.id | tostring'
           title: ".name"
-          blueprint: '"codeRepository"'
+          blueprint: '"aikidoRepository"'
           properties:
             id: ".id"
             name: ".name"
@@ -23,20 +23,21 @@ resources:
     port:
       entity:
         mappings:
-          identifier: '.id | tostring'
-          title: ".title"
+          identifier: ".id | tostring"
+          title: '.affected_package + " (" + .cve_id + ")"'
           blueprint: '"vulnerability"'
           properties:
             id: ".id"
+            group_id: ".group_id"
             type: ".type"
-            title: ".title"
-            description: ".description"
+            cve_id: ".cve_id"
+            affected_package: ".affected_package"
+            affected_file: ".affected_file"
+            attack_surface: ".attack_surface"
+            status: ".status"
             severity_score: ".severity_score"
             severity: ".severity"
-            status: ".group_status"
-            time_to_fix_minutes: ".time_to_fix_minutes"
-            how_to_fix: ".how_to_fix"
-            cveIds: ".related_cve_ids"
-      relations:
-        repository: '.locations[0].id | tostring'
-
+            first_detected_at: ".first_detected_at"
+            code_repo_id: ".code_repo_id"
+            code_repo_name: ".code_repo_name"
+      relations: { }

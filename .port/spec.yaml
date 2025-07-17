@@ -9,7 +9,7 @@ features:
   - type: exporter
     section: Security
     resources:
-      - kind: code_repository
+      - kind: repository
       - kind: vulnerability
 
 configurations:

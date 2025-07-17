@@ -21,10 +21,10 @@ This integration allows you to:
 
 The following Aikido resources can be ingested into Port:
 
-| Aikido Resource   | Port Kind         |
-| ----------------- | ----------------- |
-| Code Repositories | `code_repository` |
-| Vulnerabilities   | `vulnerability`   |
+| Aikido Resource | Port Kind       |
+|-----------------|-----------------|
+| Repositories    | `repository`    |
+| Vulnerabilities | `vulnerability` |
 
 Each field available from the Aikido API can be referenced in the integration's mapping configuration.
 
@@ -74,7 +74,7 @@ features:
   - type: exporter
     section: Security
     resources:
-      - kind: code_repository
+      - kind: repository
       - kind: vulnerability
 
 configurations:

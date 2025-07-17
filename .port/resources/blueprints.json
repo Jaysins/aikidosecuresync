@@ -1,7 +1,7 @@
 [
   {
-    "identifier": "codeRepository",
-    "title": "Code Repository",
+    "identifier": "aikidoRepository",
+    "title": "Aikido Repository",
     "icon": "GitBranch",
     "description": "A code repository synced from Aikido",
     "schema": {
@@ -51,24 +51,52 @@
     "identifier": "vulnerability",
     "title": "Vulnerability",
     "icon": "Shield",
-    "description": "A security vulnerability issue detected by Aikido",
+    "description": "An individual security finding from Aikido’s issues export",
     "schema": {
       "properties": {
         "id": {
-          "title": "Vulnerability ID",
+          "title": "Issue ID",
+          "type": "number"
+        },
+        "group_id": {
+          "title": "Issue Group ID",
           "type": "number"
         },
         "type": {
           "title": "Type",
           "type": "string"
         },
-        "title": {
-          "title": "Title",
+        "cve_id": {
+          "title": "CVE Identifier",
           "type": "string"
         },
-        "description": {
-          "title": "Description",
+        "affected_package": {
+          "title": "Affected Package",
           "type": "string"
+        },
+        "affected_file": {
+          "title": "Affected File",
+          "type": "string"
+        },
+        "attack_surface": {
+          "title": "Attack Surface",
+          "type": "string",
+          "enum": [
+            "frontend",
+            "backend",
+            "docker_container",
+            "cloud"
+          ]
+        },
+        "status": {
+          "title": "Status",
+          "type": "string",
+          "enum": [
+            "open",
+            "ignored",
+            "snoozed",
+            "closed"
+          ]
         },
         "severity_score": {
           "title": "Severity Score",
@@ -81,55 +109,36 @@
             "critical",
             "high",
             "medium",
-            "low",
-            "info"
+            "low"
           ]
         },
-        "status": {
-          "title": "Status",
-          "type": "string",
-          "enum": [
-            "new",
-            "in_progress",
-            "resolved",
-            "accepted",
-            "false_positive"
-          ]
-        },
-        "time_to_fix_minutes": {
-          "title": "Time to Fix (minutes)",
+        "first_detected_at": {
+          "title": "First Detected At (Epoch)",
           "type": "number"
         },
-        "how_to_fix": {
-          "title": "How to Fix",
-          "type": "string"
+        "code_repo_id": {
+          "title": "Code Repository ID",
+          "type": "number"
         },
-        "cveIds": {
-          "title": "CVE Identifiers",
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
+        "code_repo_name": {
+          "title": "Code Repository Name",
+          "type": "string"
         }
       },
       "required": [
         "id",
-        "title",
-        "severity",
+        "group_id",
+        "type",
+        "cve_id",
+        "affected_package",
+        "attack_surface",
+        "status",
         "severity_score",
-        "status"
+        "severity"
       ]
     },
     "aggregationProperties": {},
-    "relations": {
-      "repository": {
-        "target": "codeRepository",
-        "title": "Affected Repository",
-        "description": "Code repository with the vulnerability",
-        "required": false,
-        "many": false
-      }
-    }
+    "relations": {}
   }
 ]
 

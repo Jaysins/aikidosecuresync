@@ -18,20 +18,51 @@ class RepositorySelector(Selector):
 
 
 class VulnerabilitySelector(Selector):
-    repo_id: int | None = Field(
-        alias="filter_code_repo_id",
+    format: Literal["json", "csv"] = Field(
+        default="json",
+        description="Response format",
+    )
+    filter_status: Literal["all", "open", "ignored", "snoozed", "closed"] = Field(
+        default="all",
+        description="Filter issues by status",
+    )
+    filter_team_id: int | None = Field(
         default=None,
-        description="Filter vulnerabilities by Code Repository ID",
+        description="Filter issues by team ID",
     )
-    per_page: int = Field(
-        default=20,
-        description="Items per page (10–20)",
+    filter_issue_group_id: int | None = Field(
+        default=None,
+        description="Filter issues by issue group ID",
+    )
+    filter_code_repo_id: int | None = Field(
+        default=None,
+        description="Filter issues by code repository ID",
+    )
+    filter_container_repo_id: int | None = Field(
+        default=None,
+        description="Filter issues by container repository ID",
+    )
+    filter_container_repo_name: str | None = Field(
+        default=None,
+        description="Filter issues by container repository name",
+    )
+    filter_domain_id: int | None = Field(
+        default=None,
+        description="Filter issues by domain ID",
+    )
+    filter_issue_type: str | None = Field(
+        default=None,
+        description="Filter issues by type (e.g. open_source, cloud, iac)",
+    )
+    filter_severities: str | None = Field(
+        default=None,
+        description="Comma‑separated list of severities to include",
     )
 
 
-class CodeRepoResourceConfig(ResourceConfig):
+class AikidoRepositoryResourceConfig(ResourceConfig):
     selector: RepositorySelector
-    kind: Literal["code_repository"]
+    kind: Literal["repository"]
 
 
 class VulnerabilityResourceConfig(ResourceConfig):
@@ -41,7 +72,7 @@ class VulnerabilityResourceConfig(ResourceConfig):
 
 class AikidoPortAppConfig(PortAppConfig):
     resources: list[
-        CodeRepoResourceConfig
+        AikidoRepositoryResourceConfig
         | VulnerabilityResourceConfig
         ] = Field(default_factory=list)
 
